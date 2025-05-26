@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFT_FFT_realization", "DFT_FFT_realization\DFT_FFT_realization.csproj", "{D6FF70BE-5740-4D5D-B399-4E9BE977FF1A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6FF70BE-5740-4D5D-B399-4E9BE977FF1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6FF70BE-5740-4D5D-B399-4E9BE977FF1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6FF70BE-5740-4D5D-B399-4E9BE977FF1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6FF70BE-5740-4D5D-B399-4E9BE977FF1A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EC4EC944-38E2-49D0-AC49-39AFDDB3582F}
+	EndGlobalSection
+EndGlobal
