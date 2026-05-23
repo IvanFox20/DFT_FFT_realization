@@ -41,7 +41,7 @@ public class PolynomialMultiplication
         double[] result = new double[resultLength];
         for (int i = 0; i < resultLength; i++)
         {
-            result[i] = C[i].Real / fftSize;
+            result[i] = C[i].Real;
         }
 
         return result;
