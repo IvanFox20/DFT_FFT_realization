@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DFT_FFT_realization;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
@@ -8,6 +9,10 @@ class Program
     static void Main()
     {
         CheckFFTCorrectness();
+
+        AudioSpectrumAnalyzer.AnalyzeSignal();
+        PerformanceGraph.BuildPerformanceGraph();
+
         BigPolynomial(power: 14);
         BigPolynomial(power: 15);
         BigPolynomial(power: 16);
