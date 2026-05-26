@@ -13,9 +13,9 @@ class Program
         AudioSpectrumAnalyzer.AnalyzeSignal();
         PerformanceGraph.BuildPerformanceGraph();
 
-        BigPolynomial(power: 14);
-        BigPolynomial(power: 15);
-        BigPolynomial(power: 16);
+        //BigPolynomial(power: 14);
+        //BigPolynomial(power: 15);
+        //BigPolynomial(power: 16);
         Console.WriteLine();
         Console.WriteLine("Тест на небольшом многочлене");
         ShortPolynomial();
