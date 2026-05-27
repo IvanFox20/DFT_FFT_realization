@@ -62,6 +62,24 @@ namespace DFT_FFT_realization
 
             ApplyHammingWindow(signal);
 
+            // ---------- ГРАФИК СИГНАЛА ПОСЛЕ ОКНА ХЭММИНГА ----------
+
+            var hammingPlot = new ScottPlot.Plot();
+
+            hammingPlot.Add.Scatter(time, signal);
+
+            hammingPlot.Title("Сигнал после применения окна Хэмминга");
+
+            hammingPlot.XLabel("Время (сек)");
+            hammingPlot.YLabel("Амплитуда");
+
+            // Показываем только первые 0.02 секунды
+            hammingPlot.Axes.SetLimits(0, 0.02);
+
+            hammingPlot.SavePng("signal_hamming.png", 1200, 600);
+
+            Console.WriteLine("Сигнал после окна Хэмминга сохранён в signal_hamming.png");
+
             // ---------- ПОДГОТОВКА ДАННЫХ ДЛЯ FFT ----------
 
             Complex[] fftData = new Complex[sampleCount];
