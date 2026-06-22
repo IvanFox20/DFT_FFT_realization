@@ -1,5 +1,6 @@
 ﻿using DFT_FFT_realization;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
@@ -8,32 +9,155 @@ class Program
 {
     static void Main()
     {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine("╔════════════════════════════════════════════════════════╗");
+            Console.WriteLine("║  1. Проверка корректности FFT/IFFT                     ║");
+            Console.WriteLine("║  2. Демонстрация умножения многочленов                 ║");
+            Console.WriteLine("║  3. Задача «Вор в магазине»                            ║");
+            Console.WriteLine("║  4. Спектральный анализ аудиосигнала                   ║");
+            Console.WriteLine("║  5. Построение графика производительности              ║");
+            Console.WriteLine("║  6. Запустить все демонстрации последовательно         ║");
+            Console.WriteLine("║  0. Выход                                              ║");
+            Console.WriteLine("╚════════════════════════════════════════════════════════╝");
+            Console.Write("\nВыберите пункт меню: ");
+
+            string choice = Console.ReadLine()?.Trim();
+
+            try
+            {
+                switch (choice)
+                {
+                    case "1":
+                        CheckFFTCorrectness();
+                        break;
+                    case "2":
+                        DemoPolynomialMultiplication();
+                        break;
+                    case "3":
+                        ShopRobberTask();
+                        break;
+                    case "4":
+                        AudioSpectrumAnalyzer.AnalyzeSignal();
+                        break;
+                    case "5":
+                        PerformanceGraph.BuildPerformanceGraph();
+                        break;
+                    case "6":
+                        RunAllDemos();
+                        break;
+                    case "0":
+                        Console.WriteLine("\nЗавершение работы. Спасибо за внимание!");
+                        return;
+                    default:
+                        Console.WriteLine("\nНеверный выбор. Попробуйте снова.");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"\n[ОШИБКА] {ex.Message}");
+            }
+
+            Console.WriteLine("\nНажмите любую клавишу для возврата в меню...");
+            Console.ReadKey();
+        }
+    }
+
+    private static void RunAllDemos()
+    {
+        Console.WriteLine("\n=== Запуск всех демонстраций ===\n");
+
         CheckFFTCorrectness();
+        Console.WriteLine("\n" + new string('-', 60) + "\n");
+
+        DemoPolynomialMultiplication();
+        Console.WriteLine("\n" + new string('-', 60) + "\n");
+
+        ShopRobberTask();
+        Console.WriteLine("\n" + new string('-', 60) + "\n");
 
         AudioSpectrumAnalyzer.AnalyzeSignal();
-        PerformanceGraph.BuildPerformanceGraph();
-        ShopRobberTask();
+    }
+
+    private static void DemoPolynomialMultiplication()
+    {
+        Console.WriteLine("\n=== Демонстрация умножения многочленов ===\n");
+
+        int[] sizes = { 16, 32, 64, 128, 512, 2048, 4096, 16384, 32768,65536 };
+        Random rnd = new Random(42);
+
+        double[] warmup = new double[16];
+        PolynomialMultiplication.MultiplyNaive(warmup, warmup);
+        PolynomialMultiplication.MultiplyUsingFFT(warmup, warmup);
+
+        Console.WriteLine("┌──────────┬────────────────┬────────────────┬────────────┐");
+        Console.WriteLine("│ Размер N │ Классический   │ БПФ            │ Ускорение  │");
+        Console.WriteLine("│          │ (мс)           │ (мс)           │            │");
+        Console.WriteLine("├──────────┼────────────────┼────────────────┼────────────┤");
+
+        foreach (int size in sizes)
+        {
+            double[] a = new double[size];
+            double[] b = new double[size];
+
+            for (int i = 0; i < size; i++)
+            {
+                a[i] = rnd.Next(10);
+                b[i] = rnd.Next(10);
+            }
+
+            int iterations = size <= 2048 ? 50 : 1;
+
+            var sw1 = Stopwatch.StartNew();
+            for (int i = 0; i < iterations; i++)
+            {
+                PolynomialMultiplication.MultiplyNaive(a, b);
+            }
+            sw1.Stop();
+            double timeNaive = sw1.Elapsed.TotalMilliseconds / iterations;
+
+            var sw2 = Stopwatch.StartNew();
+            for (int i = 0; i < iterations; i++)
+            {
+                PolynomialMultiplication.MultiplyUsingFFT(a, b);
+            }
+            sw2.Stop();
+            double timeFFT = sw2.Elapsed.TotalMilliseconds / iterations;
+
+            string speedupStr = timeFFT > 0.001 ? $"{timeNaive / timeFFT:F1}x" : "-";
+
+            Console.WriteLine($"│ {size,8} │ {timeNaive,14:F3} │ {timeFFT,14:F3} │ {speedupStr,10} │");
+        }
+
+        Console.WriteLine("└──────────┴────────────────┴────────────────┴────────────┘");
     }
 
     private static void ShopRobberTask()
     {
+        Console.WriteLine("\n=== Задача «Вор в магазине» ===\n");
         Console.WriteLine("Выберите режим работы:");
-        Console.WriteLine("1 - Ручной ввод данных");
-        Console.WriteLine("2 - Случайная генерация данных");
+        Console.WriteLine("  1 - Ручной ввод данных");
+        Console.WriteLine("  2 - Случайная генерация данных");
+        Console.WriteLine("  3 - Демонстрационный пример (a=[1,3,4], k=3)");
+        Console.Write("\nВаш выбор: ");
 
-        string mode = Console.ReadLine();
+        string mode = Console.ReadLine()?.Trim();
         int n = 0, k = 0;
         int[] costs = null;
 
         if (mode == "1")
         {
             // Ручной ввод данных
-            Console.WriteLine("Введите количество типов товаров (n) и количество товаров (k):");
+            Console.Write("\nВведите количество типов товаров (n) и количество товаров (k): ");
             string[] input = Console.ReadLine().Split();
             n = int.Parse(input[0]);
             k = int.Parse(input[1]);
 
-            Console.WriteLine("Введите стоимости товаров через пробел:");
+            Console.Write("Введите стоимости товаров через пробел: ");
             string[] costsInput = Console.ReadLine().Split();
             costs = Array.ConvertAll(costsInput, int.Parse);
         }
@@ -41,7 +165,7 @@ class Program
         {
             while (true)
             {
-                Console.WriteLine("Введите количество типов товаров (n) и количество товаров (k):");
+                Console.Write("\nВведите количество типов товаров (n) и количество товаров (k): ");
                 string line = Console.ReadLine();
 
                 if (string.IsNullOrWhiteSpace(line))
@@ -76,7 +200,16 @@ class Program
             }
 
             costs = RandomGenerator.GenerateRandomCosts(n);
-            Console.WriteLine("Сгенерированные стоимости товаров: " + string.Join(" ", costs));
+            Console.WriteLine("\nСгенерированные стоимости товаров: " + string.Join(" ", costs));
+        }
+        else if (mode == "3")
+        {
+            n = 3;
+            k = 3;
+            costs = new int[] { 1, 3, 4 };
+            Console.WriteLine("\nДемонстрационный пример:");
+            Console.WriteLine($"  n = {n}, k = {k}");
+            Console.WriteLine($"  Стоимости товаров: [{string.Join(", ", costs)}]");
         }
         else
         {
@@ -84,19 +217,35 @@ class Program
             return;
         }
 
-        // Решение задачи
+        Console.WriteLine("\nРешение задачи...");
+        var sw = Stopwatch.StartNew();
         List<int> possibleSums = ShopRobber.Solve(n, k, costs);
+        sw.Stop();
 
-        // Вывод результата
-        Console.WriteLine("Возможные суммы стоимостей:");
-        Console.WriteLine(string.Join(" ", possibleSums));
+        Console.WriteLine($"\nВремя решения: {sw.ElapsedMilliseconds} мс");
+        Console.WriteLine($"Количество достижимых сумм: {possibleSums.Count}");
+
+        if (possibleSums.Count <= 50)
+        {
+            Console.WriteLine("\nВозможные суммы стоимостей:");
+            Console.WriteLine(string.Join(" ", possibleSums));
+        }
+        else
+        {
+            Console.WriteLine("\nВозможные суммы стоимостей (первые 50):");
+            Console.WriteLine(string.Join(" ", possibleSums.Take(50)) + " ...");
+            Console.WriteLine($"Последние 10: {string.Join(" ", possibleSums.TakeLast(10))}");
+        }
+
+        int minCost = costs.Min();
+        int maxCost = costs.Max();
+        Console.WriteLine($"\nОжидаемая минимальная сумма: {minCost * k}");
+        Console.WriteLine($"Ожидаемая максимальная сумма: {maxCost * k}");
     }
 
     public static class RandomGenerator
     {
         private static readonly Random random = new Random();
-
-        // Метод для генерации случайного массива стоимостей товаров
         public static int[] GenerateRandomCosts(int n, int minValue = 1, int maxValue = 1000)
         {
             int[] costs = new int[n];
@@ -110,12 +259,11 @@ class Program
 
     private static void CheckFFTCorrectness()
     {
-        Console.WriteLine("Проверка корректности FFT/IFFT");
+        Console.WriteLine("\n=== Проверка корректности FFT/IFFT ===\n");
 
-        int size = 16;
-        Random rand = new Random();
+        int size = 1024;
+        Random rand = new Random(42);
 
-        // Генерация случайного массива
         Complex[] original = new Complex[size];
 
         for (int i = 0; i < size; i++)
@@ -123,17 +271,23 @@ class Program
             original[i] = new Complex(rand.NextDouble(), rand.NextDouble());
         }
 
-        // Копия массива
         Complex[] transformed = new Complex[size];
         Array.Copy(original, transformed, size);
 
-        // Прямое БПФ
+        Console.WriteLine($"Размер массива: {size}");
+        Console.WriteLine("Применяем прямое БПФ...");
+
+        var sw = Stopwatch.StartNew();
         FFT.ComputeFFT(transformed);
+        sw.Stop();
+        Console.WriteLine($"  Время FFT: {sw.Elapsed.TotalMilliseconds:F3} мс");
 
-        // Обратное БПФ
+        Console.WriteLine("Применяем обратное БПФ...");
+        sw.Restart();
         FFT.ComputeIFFT(transformed);
+        sw.Stop();
+        Console.WriteLine($"  Время IFFT: {sw.Elapsed.TotalMilliseconds:F3} мс");
 
-        // Вычисление максимальной ошибки
         double maxError = 0;
 
         for (int i = 0; i < size; i++)
@@ -146,15 +300,15 @@ class Program
             }
         }
 
-        Console.WriteLine($"Максимальная ошибка восстановления: {maxError:E6}");
+        Console.WriteLine($"\nМаксимальная ошибка восстановления: {maxError:E6}");
 
         if (maxError < 1e-9)
         {
-            Console.WriteLine("FFT/IFFT работают корректно.\n");
+            Console.WriteLine("✓ FFT/IFFT работают корректно.");
         }
         else
         {
-            Console.WriteLine("Обнаружена значительная ошибка.\n");
+            Console.WriteLine("✗ Обнаружена значительная ошибка.");
         }
     }
 }
