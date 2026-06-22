@@ -8,15 +8,12 @@ namespace DFT_FFT_realization
     {
         public static void AnalyzeSignal()
         {
-            // Параметры сигнала
             int sampleRate = 44100;
             int sampleCount = 4096;
 
-            // Частоты сигнала
-            double frequency1 = 440;   // Ля первой октавы
-            double frequency2 = 880;   // Вторая гармоника
+            double frequency1 = 440; 
+            double frequency2 = 880;
 
-            // Генерация сигнала
             double[] signal = new double[sampleCount];
 
             for (int i = 0; i < sampleCount; i++)
@@ -28,10 +25,9 @@ namespace DFT_FFT_realization
                     0.5 * Math.Sin(2 * Math.PI * frequency2 * t);
             }
 
-            // Сохраняем исходный сигнал для визуализации
             double[] originalSignal = (double[])signal.Clone();
 
-            // ---------- ВРЕМЕННАЯ ШКАЛА ----------
+            // Временная шкала
 
             double[] time = new double[sampleCount];
 
@@ -40,7 +36,7 @@ namespace DFT_FFT_realization
                 time[i] = (double)i / sampleRate;
             }
 
-            // ---------- ГРАФИК ИСХОДНОГО СИГНАЛА ----------
+            // Графки исходного сигнала
 
             var signalPlot = new ScottPlot.Plot();
 
@@ -51,18 +47,15 @@ namespace DFT_FFT_realization
             signalPlot.XLabel("Время (сек)");
             signalPlot.YLabel("Амплитуда");
 
-            // Показываем только первые 0.02 секунды
             signalPlot.Axes.SetLimits(0, 0.02);
 
             signalPlot.SavePng("signal.png", 1200, 600);
 
             Console.WriteLine("Сигнал сохранён в signal.png");
 
-            // ---------- ПРИМЕНЕНИЕ ОКНА ХЭММИНГА ----------
-
             ApplyHammingWindow(signal);
 
-            // ---------- ГРАФИК СИГНАЛА ПОСЛЕ ОКНА ХЭММИНГА ----------
+            // График после применения окна Хэмминга
 
             var hammingPlot = new ScottPlot.Plot();
 
@@ -73,14 +66,13 @@ namespace DFT_FFT_realization
             hammingPlot.XLabel("Время (сек)");
             hammingPlot.YLabel("Амплитуда");
 
-            // Показываем только первые 0.02 секунды
             hammingPlot.Axes.SetLimits(0, 0.02);
 
             hammingPlot.SavePng("signal_hamming.png", 1200, 600);
 
             Console.WriteLine("Сигнал после окна Хэмминга сохранён в signal_hamming.png");
 
-            // ---------- ПОДГОТОВКА ДАННЫХ ДЛЯ FFT ----------
+            // Подготовка данных для FFT
 
             Complex[] fftData = new Complex[sampleCount];
 
@@ -89,18 +81,18 @@ namespace DFT_FFT_realization
                 fftData[i] = new Complex(signal[i], 0);
             }
 
-            // ---------- FFT ----------
+            // FFT
 
             FFT.ComputeFFT(fftData);
 
-            // ---------- НОРМИРОВКА ----------
+            // Нормировка
 
             for (int i = 0; i < sampleCount; i++)
             {
                 fftData[i] /= sampleCount;
             }
 
-            // ---------- АМПЛИТУДНЫЙ СПЕКТР ----------
+            // Амплитудный спектр
 
             int spectrumSize = sampleCount / 2;
 
@@ -116,7 +108,7 @@ namespace DFT_FFT_realization
                     fftData[i].Magnitude;
             }
 
-            // ---------- ГРАФИК СПЕКТРА ----------
+            // График спектра
 
             var spectrumPlot = new ScottPlot.Plot();
 
@@ -127,7 +119,6 @@ namespace DFT_FFT_realization
             spectrumPlot.XLabel("Частота (Гц)");
             spectrumPlot.YLabel("Амплитуда");
 
-            // Отображаем диапазон до 1000 Гц
             spectrumPlot.Axes.SetLimits(0, 1000);
 
             spectrumPlot.SavePng("spectrum.png", 1200, 600);

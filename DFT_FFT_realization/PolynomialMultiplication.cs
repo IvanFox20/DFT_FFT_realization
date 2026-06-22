@@ -3,7 +3,6 @@ using System.Numerics;
 using System.Diagnostics;
 public class PolynomialMultiplication
 {
-    // Используем ранее реализованный FFT.ComputeFFT
     public static double[] MultiplyUsingFFT(double[] a, double[] b)
     {
         int n = a.Length;
@@ -41,13 +40,12 @@ public class PolynomialMultiplication
         double[] result = new double[resultLength];
         for (int i = 0; i < resultLength; i++)
         {
-            result[i] = C[i].Real;
+            result[i] = Math.Round(C[i].Real);
         }
 
         return result;
     }
 
-    // Получает ближайшую степень двойки, большую или равную x
     private static int GetNextPowerOfTwo(int x)
     {
         if (x == 0)

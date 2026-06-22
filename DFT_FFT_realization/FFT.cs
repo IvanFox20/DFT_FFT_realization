@@ -63,7 +63,7 @@ public class FFT
                 Complex W = Complex.One;
                 for (int j = 0; j < m / 2; j++)
                 {
-                    Complex t = W * data[k + j + m / 2];  // Twiddle factor * нечетное значение
+                    Complex t = W * data[k + j + m / 2];  // Поворотный множитель * нечетное значение
                     Complex u = data[k + j];              // Четное значение
 
                     data[k + j] = u + t;                  // Верхняя часть "бабочки"
@@ -104,7 +104,7 @@ public class FFT
                 Complex W = Complex.One;
                 for (int j = 0; j < m / 2; j++)
                 {
-                    Complex t = W * data[k + j + m / 2];  // Twiddle factor * нечетное значение
+                    Complex t = W * data[k + j + m / 2];  // Поворотный множитель * нечетное значение
                     Complex u = data[k + j];              // Четное значение
 
                     data[k + j] = u + t;                  // Верхняя часть "бабочки"
@@ -114,7 +114,7 @@ public class FFT
                 }
             }
         }
-        // Нормировка (обратное БПФ требует деления на размер)
+
         for (int i = 0; i < N; i++)
         {
             data[i] /= N;

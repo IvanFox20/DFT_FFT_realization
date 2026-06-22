@@ -10,6 +10,13 @@ namespace DFT_FFT_realization
         {
             int[] sizes =
             {
+                2,
+                4,
+                8,
+                16,
+                32,
+                64,
+                128,
                 256,
                 512,
                 1024,
