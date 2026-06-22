@@ -46,7 +46,6 @@ namespace DFT_FFT_realization
                     b[j] = random.NextDouble();
                 }
 
-                // Наивное умножение
                 Stopwatch sw = Stopwatch.StartNew();
 
                 PolynomialMultiplication
@@ -56,7 +55,6 @@ namespace DFT_FFT_realization
 
                 naiveTimes[i] = sw.Elapsed.TotalMilliseconds;
 
-                // FFT умножение
                 sw.Restart();
 
                 PolynomialMultiplication
@@ -70,7 +68,6 @@ namespace DFT_FFT_realization
                     $"N = {n} | Naive = {naiveTimes[i]:F3} ms | FFT = {fftTimes[i]:F3} ms");
             }
 
-            // Построение графика
             var plt = new ScottPlot.Plot();
 
             plt.Add.Scatter(

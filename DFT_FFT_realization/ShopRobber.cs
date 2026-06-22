@@ -13,20 +13,17 @@ public class ShopRobber
 
         long maxSum = (long)maxCost * k;
 
-        // Используем long для NTT
         long[] polynomial = new long[maxSum + 1];
         foreach (var cost in costs)
         {
             polynomial[cost] = 1;
         }
 
-        // Быстрое возведение в степень через NTT
         long[] result = PolynomialPowerNTT(polynomial, k, (int)maxSum);
 
         List<int> possibleSums = new List<int>();
         for (int i = 0; i <= maxSum; i++)
         {
-            // Коэффициент > 0 означает достижимость
             if (result[i] > 0)
             {
                 possibleSums.Add(i);

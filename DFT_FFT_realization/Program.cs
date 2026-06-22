@@ -151,7 +151,6 @@ class Program
 
         if (mode == "1")
         {
-            // Ручной ввод данных
             Console.Write("\nВведите количество типов товаров (n) и количество товаров (k): ");
             string[] input = Console.ReadLine().Split();
             n = int.Parse(input[0]);
@@ -304,11 +303,11 @@ class Program
 
         if (maxError < 1e-9)
         {
-            Console.WriteLine("✓ FFT/IFFT работают корректно.");
+            Console.WriteLine("FFT/IFFT работают корректно.");
         }
         else
         {
-            Console.WriteLine("✗ Обнаружена значительная ошибка.");
+            Console.WriteLine("Обнаружена значительная ошибка.");
         }
     }
 }

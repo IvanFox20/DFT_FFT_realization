@@ -27,7 +27,6 @@ namespace DFT_FFT_realization
 
             double[] originalSignal = (double[])signal.Clone();
 
-            // Временная шкала
 
             double[] time = new double[sampleCount];
 
@@ -36,7 +35,6 @@ namespace DFT_FFT_realization
                 time[i] = (double)i / sampleRate;
             }
 
-            // Графки исходного сигнала
 
             var signalPlot = new ScottPlot.Plot();
 
@@ -55,8 +53,6 @@ namespace DFT_FFT_realization
 
             ApplyHammingWindow(signal);
 
-            // График после применения окна Хэмминга
-
             var hammingPlot = new ScottPlot.Plot();
 
             hammingPlot.Add.Scatter(time, signal);
@@ -72,8 +68,6 @@ namespace DFT_FFT_realization
 
             Console.WriteLine("Сигнал после окна Хэмминга сохранён в signal_hamming.png");
 
-            // Подготовка данных для FFT
-
             Complex[] fftData = new Complex[sampleCount];
 
             for (int i = 0; i < sampleCount; i++)
@@ -81,18 +75,12 @@ namespace DFT_FFT_realization
                 fftData[i] = new Complex(signal[i], 0);
             }
 
-            // FFT
-
             FFT.ComputeFFT(fftData);
-
-            // Нормировка
 
             for (int i = 0; i < sampleCount; i++)
             {
                 fftData[i] /= sampleCount;
             }
-
-            // Амплитудный спектр
 
             int spectrumSize = sampleCount / 2;
 
@@ -107,8 +95,6 @@ namespace DFT_FFT_realization
                 magnitudes[i] =
                     fftData[i].Magnitude;
             }
-
-            // График спектра
 
             var spectrumPlot = new ScottPlot.Plot();
 
@@ -126,7 +112,6 @@ namespace DFT_FFT_realization
             Console.WriteLine("Спектр сохранён в spectrum.png");
         }
 
-        // Оконная функция Хэмминга
         private static void ApplyHammingWindow(double[] signal)
         {
             int N = signal.Length;
